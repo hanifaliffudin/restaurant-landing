@@ -1,36 +1,54 @@
 import { useEffect, useRef, useState, type MouseEvent } from 'react'
 import './App.css'
 
-const dishes = [
+const menuGroups = [
   {
-    category: 'To begin',
-    name: 'Olives & warm focaccia',
-    detail: 'Castelvetrano olives, rosemary oil, sea salt',
-    mark: '01',
+    id: 'antipasti',
+    name: 'To begin',
+    dishes: [
+      {
+        name: 'Olives & warm focaccia',
+        detail: 'Castelvetrano olives, rosemary oil, sea salt',
+        price: '€8',
+        mark: '01',
+      },
+      {
+        name: 'Burrata di stagione',
+        detail: 'Stone fruit, basil, grilled sourdough',
+        price: '€13',
+        mark: '02',
+      },
+    ],
   },
   {
-    category: 'To begin',
-    name: 'Burrata di stagione',
-    detail: 'Stone fruit, basil, grilled sourdough',
-    mark: '02',
+    id: 'pasta',
+    name: 'From the pasta pot',
+    dishes: [
+      {
+        name: 'Tagliatelle al ragù',
+        detail: 'Slow-cooked beef, tomato, a little Parmigiano',
+        price: '€19',
+        mark: '03',
+      },
+      {
+        name: 'Ravioli di ricotta',
+        detail: 'Lemon ricotta, brown butter, crisp sage',
+        price: '€18',
+        mark: '04',
+      },
+    ],
   },
   {
-    category: 'From the pasta pot',
-    name: 'Tagliatelle al ragù',
-    detail: 'Slow-cooked beef, tomato, a little Parmigiano',
-    mark: '03',
-  },
-  {
-    category: 'From the pasta pot',
-    name: 'Ravioli di ricotta',
-    detail: 'Lemon ricotta, brown butter, crisp sage',
-    mark: '04',
-  },
-  {
-    category: 'Something sweet',
-    name: 'Tiramisù della casa',
-    detail: 'Espresso-soaked, cocoa-dusted, made for sharing',
-    mark: '05',
+    id: 'dolci',
+    name: 'Something sweet',
+    dishes: [
+      {
+        name: 'Tiramisù della casa',
+        detail: 'Espresso-soaked, cocoa-dusted, made for sharing',
+        price: '€9',
+        mark: '05',
+      },
+    ],
   },
 ]
 
@@ -159,7 +177,7 @@ function App() {
           <a className="hero__scroll" href="#story"><span aria-hidden="true">↓</span> Take a look around</a>
         </section>
 
-        <section className="story section-wrap" id="story" aria-labelledby="story-title">
+        <section className="story section-wrap reveal-on-scroll" id="story" aria-labelledby="story-title" data-reveal>
           <div className="section-kicker"><span>02</span><span>Our little corner</span></div>
           <div className="story__layout">
             <figure className="story__image-frame">
@@ -179,7 +197,7 @@ function App() {
           </div>
         </section>
 
-        <section className="menu-section" id="menu" aria-labelledby="menu-title">
+        <section className="menu-section reveal-on-scroll" id="menu" aria-labelledby="menu-title" data-reveal>
           <div className="section-wrap menu-section__inner">
             <div className="section-kicker"><span>03</span><span>From our sample menu</span></div>
             <div className="menu-heading">
@@ -187,19 +205,29 @@ function App() {
                 <p className="eyebrow">A little something for everyone</p>
                 <h2 id="menu-title" tabIndex={-1}>Made for<br /><em>passing around.</em></h2>
               </div>
-              <p className="menu-heading__note">A fictional menu, gathered around the seasons. Every dish here is sample content for this concept page.</p>
+              <div className="menu-heading__aside">
+                <span className="menu-heading__price-note">Example prices · EUR</span>
+                <p className="menu-heading__note">Dish names and prices are fictional sample content for this concept page.</p>
+              </div>
             </div>
             <div className="menu-list">
-              {dishes.map((dish) => (
-                <article className="menu-item" key={dish.mark}>
-                  <span className="menu-item__mark" aria-hidden="true">{dish.mark}</span>
-                  <div className="menu-item__body">
-                    <p className="menu-item__category">{dish.category}</p>
-                    <h3>{dish.name}</h3>
-                    <p className="menu-item__detail">{dish.detail}</p>
+              {menuGroups.map((group) => (
+                <div className="menu-category" key={group.id} role="group" aria-labelledby={`menu-category-${group.id}`}>
+                  <div className="menu-category__heading">
+                    <h3 id={`menu-category-${group.id}`}>{group.name}</h3>
+                    <span>{String(group.dishes.length).padStart(2, '0')}</span>
                   </div>
-                  <span className="menu-item__ornament" aria-hidden="true">✳</span>
-                </article>
+                  {group.dishes.map((dish) => (
+                    <article className="menu-item" key={dish.mark}>
+                      <span className="menu-item__mark" aria-hidden="true">{dish.mark}</span>
+                      <div className="menu-item__body">
+                        <h4>{dish.name}</h4>
+                        <p className="menu-item__detail">{dish.detail}</p>
+                      </div>
+                      <span className="menu-item__price" aria-label={`Sample price ${dish.price}`}>{dish.price}</span>
+                    </article>
+                  ))}
+                </div>
               ))}
             </div>
             <div className="menu-footer-note">
@@ -210,7 +238,7 @@ function App() {
           </div>
         </section>
 
-        <section className="gallery section-wrap" aria-label="A glimpse of dinner at Osteria Sera">
+        <section className="gallery section-wrap reveal-on-scroll" aria-label="A glimpse of dinner at Osteria Sera" data-reveal>
           <div className="gallery__heading">
             <p className="eyebrow"><span>04</span> Pass the plate</p>
             <p>Something good<br />is always on the table.</p>
@@ -232,7 +260,7 @@ function App() {
           <div className="gallery__handwritten" aria-hidden="true">piano,<br />piano <span>↗</span></div>
         </section>
 
-        <section className="ordering" id="ordering" aria-labelledby="ordering-title">
+        <section className="ordering reveal-on-scroll" id="ordering" aria-labelledby="ordering-title" data-reveal>
           <div className="ordering__inner section-wrap">
             <div className="ordering__mark" aria-hidden="true">OS</div>
             <div className="ordering__copy">
@@ -251,7 +279,7 @@ function App() {
           </div>
         </section>
 
-        <section className="visit section-wrap" id="visit" aria-labelledby="visit-title">
+        <section className="visit section-wrap reveal-on-scroll" id="visit" aria-labelledby="visit-title" data-reveal>
           <div className="section-kicker"><span>05</span><span>Come by sometime</span></div>
           <div className="visit__layout">
             <div className="visit__heading">
@@ -261,7 +289,7 @@ function App() {
             <div className="visit__details">
               <div className="visit-detail">
                 <span className="visit-detail__label">Find us</span>
-                <p>Location details<br /><span>To be added — this is a fictional restaurant.</span></p>
+                <p>Location details<br /><span>To be added. This is a fictional restaurant.</span></p>
               </div>
               <div className="visit-detail">
                 <span className="visit-detail__label">When we're open</span>
@@ -276,7 +304,7 @@ function App() {
           </div>
         </section>
 
-        <section className="prototype-details" aria-label="Prototype action details">
+        <section className="prototype-details reveal-on-scroll" aria-label="Prototype action details" data-reveal>
           <div className="prototype-detail" id="ordering-details" tabIndex={-1}>
             <span className="prototype-detail__icon" aria-hidden="true">↗</span>
             <div>
@@ -297,6 +325,14 @@ function App() {
           </div>
         </section>
       </main>
+
+      <a className="mobile-reserve" href="#reservations" aria-label="Reserve a table. Prototype only, no booking is submitted.">
+        <span className="mobile-reserve__copy">
+          <span className="mobile-reserve__name">Osteria Sera</span>
+          <span className="mobile-reserve__note">Prototype only · no booking is submitted</span>
+        </span>
+        <span className="mobile-reserve__action">Reserve a table <span aria-hidden="true">↗</span></span>
+      </a>
 
       <footer className="site-footer">
         <div className="site-footer__top section-wrap">
